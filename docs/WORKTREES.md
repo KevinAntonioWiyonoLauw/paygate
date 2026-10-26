@@ -30,8 +30,28 @@ The dashboard is separate:
 ```powershell
 cd web
 $env:PAYGATE_BACKEND = "http://127.0.0.1:8788"   # match this worktree's API port
-pnpm dev
+pnpm dev --port 3001                             # match this worktree's web port
 ```
+
+`PAYGATE_BACKEND` is read by `next.config.ts` at build time for the `/api/*`
+rewrite. A production `pnpm build` therefore bakes in whatever port was set when
+you built it — rebuild after changing it, or the dashboard will proxy to the
+wrong gateway while still looking healthy.
+
+## Verified state
+
+All four stacks were confirmed running together, each blind to the others:
+
+| Check | Result |
+|---|---|
+| `/healthz` on 8787–8790 | all `ok` |
+| Dashboard `/` on 3000–3003 | all HTTP 200 |
+| Login + order list through each proxy | each returned only its own order |
+| `go build`/`vet`/`test`, `pnpm lint`/`build` per worktree | all exit 0 |
+
+The isolation test in full: bind the same static QRIS in every worktree, create
+one order per stack, then confirm each database holds exactly one row and the
+main stack still holds none of them.
 
 ## Creating another worktree
 
