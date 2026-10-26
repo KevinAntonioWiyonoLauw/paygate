@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: paygate-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: paygate
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-paygate_dev_pw}
+      POSTGRES_DB: paygate
+      # Deterministic collation so ORDER BY on text is stable across hosts.
+      LANG: C.UTF-8
+    ports:
+      # 5433 on purpose: latex-postgres and stockpick-timescaledb already own 5432.
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - paygate_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paygate -d paygate"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  adminer:
+    image: adminer:latest
+    container_name: paygate-adminer
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8081:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+
+volumes:
+  paygate_pgdata:

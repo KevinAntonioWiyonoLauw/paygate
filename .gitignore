@@ -1,0 +1,32 @@
+# Secrets. Never commit: JWT signing key, encryption key, admin password,
+# Shopee session material.
+.env
+.env.local
+.env.*.local
+
+# Go build output
+backend/bin/
+*.exe
+*.test
+*.out
+
+# Node / Next.js
+web/node_modules/
+web/.next/
+web/out/
+web/.turbo/
+web/next-env.d.ts
+
+# Runtime logs and scratch captures
+*.log
+*.png
+!web/public/**/*.png
+
+# Editor / OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local database dumps (ops/backup.sh writes here)
+ops/backups/
