@@ -131,6 +131,9 @@ var (
 	ErrUnauthorized  = errors.New("unauthorized")
 	ErrPoolExhausted = errors.New("amount offset pool exhausted")
 	ErrInvalidState  = errors.New("invalid state transition")
+	// ErrNotConfigured is a setup problem, not a server fault: the operator has
+	// not bound a static QRIS yet, so orders cannot be created.
+	ErrNotConfigured = errors.New("not configured")
 )
 
 // NewPublicID builds a human-readable, sortable order id: ORD-20261026-4F2A9C.

@@ -390,6 +390,8 @@ func (s *Server) fail(w http.ResponseWriter, err error) {
 		writeError(w, http.StatusConflict, "conflict", err.Error())
 	case errors.Is(err, domain.ErrPoolExhausted):
 		writeError(w, http.StatusServiceUnavailable, "pool_exhausted", err.Error())
+	case errors.Is(err, domain.ErrNotConfigured):
+		writeError(w, http.StatusConflict, "not_configured", err.Error())
 	case errors.Is(err, domain.ErrUnauthorized):
 		writeError(w, http.StatusUnauthorized, "unauthorized", err.Error())
 	default:

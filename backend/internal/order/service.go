@@ -120,7 +120,7 @@ func (s *Service) Create(ctx context.Context, in CreateInput) (domain.Order, err
 		return domain.Order{}, fmt.Errorf("order: amount must be positive")
 	}
 	if s.staticQRIS == "" {
-		return domain.Order{}, fmt.Errorf("order: no static QRIS bound yet; bind one in Settings")
+		return domain.Order{}, fmt.Errorf("%w: no static QRIS bound yet; bind one in Settings", domain.ErrNotConfigured)
 	}
 
 	now := time.Now().UTC()
